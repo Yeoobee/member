@@ -100,6 +100,12 @@
     }
 
 18. 글 제목을 누르면 상세정보를 볼 수 있는 findById.html 생성
+19. findById.html에 댓글을 달 수 있는 Comment 클래스 생성                             
+                                                                                             
+                                                                                             
+                                                                                             
+                                                                                             
+                                                                                             
 
 
 
