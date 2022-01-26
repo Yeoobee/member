@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        const boardUpdate = () => {
+            const id = document.getElementById('boardId').value;
+            const writer = document.getElementById('boardWriter').value;
+            const title = document.getElementById('boardTitle').value;
+            const contents = document.getElementById('boardContents').value;
+
+            const updateData = JSON.stringify({
+                boardId: id,
+                boardWriter: writer,
+                boardTitle: title,
+                boardContents: contents
+            });
+            const reqUrl = "/board/" + id;
+                $.ajax({
+                    type: 'put',
+                    url: reqUrl,
+                    contentType: 'application/json',
+                    data: updateData,
+                    success: function () {
+                        location.href = "/board/" + id;
+                    },
+                    error: function () {
+                        alert('ajax 실패');
+                    }
+                });
+        }
+    </script>
+</head>
+<body>
+    <h2>update.html</h2>
+    <form action="/board/update" method="post" name="updateForm">
+        <input type="hidden" name="boardId" id="boardId" th:value="${board.boardId}"><br>
+        <input type="text" name="boardWriter" id="boardWriter" th:value="${board.boardWriter}" placeholder="작성자" readonly><br>
+        <input type="text" name="boardTitle" id="boardTitle" th:value="${board.boardTitle}" placeholder="제목"><br>
+        <input type="text" name="boardContents" id="boardContents" th:value="${board.boardContents}" placeholder="내용"><br>
+        <input type="button" value="수정(put)" th:onclick="boardUpdate()">
+    </form>
+</body>
+</html>

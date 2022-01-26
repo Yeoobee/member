@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+</head>
+<body>
+<h2>findById.html</h2>
+<table>
+    <thead>
+    <tr>
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>내용</th>
+        <th>작성일자</th>
+        <th>수정하기</th>
+        <th>사진</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${board.boardId}"></td>
+        <td th:text="${board.boardTitle}"></td>
+        <td th:text="${board.boardWriter}"></td>
+        <td th:text="${board.boardContents}"></td>
+        <td th:text="${board.boardDate}"></td>
+        <td><a th:href="@{|/board/update/${board.boardId}|}">수정</a></td>
+        <img th:src="@{|/files/${board.getFileName()}|}" alt="....">
+    </tr>
+    </tbody>
+
+</table>
+
+<div>
+    <p th:text="${board.getFilePath()}"></p>
+</div>
+
+<button>삭제</button>
+
+
+<div id="comment-write">
+    <input type="text" id="commentWriter" placeholder="작성자"><br>
+    <input type="text" id="commentContents" placeholder="내용"><br>
+    <button id="comment-write-btn">댓글등록</button>
+</div>
+
+<div id="comment-area">
+    <table>
+        <thead>
+        <tr>
+            <th>댓글번호</th>
+            <th>작성자</th>
+            <th>내용</th>
+            <th>작성시간</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+</table>
+<div id = "comment-detail"></div>
+</body>
+</body>
+<script>
+    $("#comment-write-btn").click(function (){
+        console.log('댓글등록 버튼 클릭');
+        const commentWriter = $("#commentWriter").val();
+        const commentContents = $("#commentContents").val();
+        const boardId = '[[${board.boardId}]]';
+        $.ajax({
+            type: 'post',
+            url: '/comment/save',
+            data: {
+                'commentWriter': commentWriter,
+                'commentContents': commentContents,
+                'boardId': boardId
+            },
+            dataType: 'json',
+            success: function (result) {
+                console.log(result);
+                let output = "";
+                output += "<table>\n" +
+                    "    <thead>\n" +
+                    "        <tr>\n" +
+                    "            <th>댓글번호</th>\n" +
+                    "            <th>작성자</th>\n" +
+                    "            <th>내용</th>\n" +
+                    "            <th>작성시간</th>\n" +
+                    "        </tr>\n" +
+                    "    </thead>\n" +
+                    "    <tbody>\n" +
+                   " for(let i = 0; i<result.list.length; i++){" +
+                    "        <tr>\n" +
+                    // "            <td>" + result[i].commentId + "</td>\n" +
+                    "            <td>" + result[i].commentWriter + "</td>\n" +
+                    "            <td>" + result[i].commentContents + "</td>\n" +
+                    // "            <td>" + result[i].commentDate + "</td>\n" +
+                    "        </tr>\n" +
+                    "}"+
+                    "    </tbody>\n" +
+                    "</table>";
+                document.getElementById('comment-detail').innerHTML = output;
+            },
+            error: function () {
+                alert('ajax 실패');
+            }
+        })
+    });
+</script>
+</html>
